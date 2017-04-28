@@ -1,0 +1,11 @@
+$LOAD_PATH.unshift File.expand_path("..", __FILE__)
+
+require "tasks/test"  # default
+
+require "tasks/console"
+require "tasks/deps"
+require "tasks/manifest"
+require "tasks/notes"
+require "tasks/package"
+require "tasks/rdoc"
+require "tasks/release"

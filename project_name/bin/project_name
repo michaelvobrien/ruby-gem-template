@@ -1,0 +1,13 @@
+#!/usr/bin/env ruby -w
+# FIX remove '-w' before release
+
+# Set LOAD_PATH when development
+git_path = File.expand_path("../../.git", __FILE__)
+if File.exist?(git_path)
+  lib_path = File.expand_path("../../lib", __FILE__)
+  $LOAD_PATH.unshift(lib_path) unless $LOAD_PATH.include?(lib_path)
+end
+
+require "project_name/cli"
+
+ProjectName::CLI.run

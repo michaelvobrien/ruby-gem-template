@@ -1,0 +1,76 @@
+#!/usr/bin/env ruby -w
+
+require "fileutils"
+
+PROJECT_PATH = File.expand_path("../project_name", __FILE__)
+unless File.directory?(PROJECT_PATH)
+  abort "'project_name' directory not found"
+end
+
+def help
+  <<~EOS
+  Usage: #{File.basename($0)} PATH
+  EOS
+end
+
+
+# PARSE OPTIONS
+
+if ARGV.length == 0
+  puts help
+  abort
+end
+
+path = ARGV.shift
+
+if path == "-h" || path == "--help"
+  puts help
+  exit
+end
+
+
+# VERIFY PATH
+
+if File.exist?(path)
+  abort "'#{path}' already exists!"
+end
+
+if path.match(/\-/)
+  abort "'#{path}' cannot include dashes (-)"
+end
+
+if path.match(/ /)
+  abort "'#{path}' cannot include whitespace"
+end
+
+if path.match(/[^[[:alnum:]]_]+/)
+  abort "'#{path}' must be alphanumeric and may include underscores (_)"
+end
+
+
+# COPY AND RENAME FILES
+
+name = File.basename(path).downcase
+constant_name = name.split('_').map(&:capitalize).join
+
+FileUtils.cp_r(PROJECT_PATH, path, verbose: true)
+FileUtils.cd(path, verbose: true)
+FileUtils.mv("project_name.gemspec", "#{name}.gemspec", verbose: true)
+FileUtils.mv("lib/project_name.rb", "lib/#{name}.rb", verbose: true)
+FileUtils.mv("lib/project_name", "lib/#{name}", verbose: true)
+FileUtils.mv("bin/project_name", "bin/#{name}", verbose: true)
+
+
+# FIND AND REPLACE
+
+cmd = "find . -type f | xargs sed -i '' -e 's/project_name/#{name}/'"
+puts cmd
+system(cmd)
+
+cmd = "find . -type f | xargs sed -i '' -e 's/ProjectName/#{constant_name}/'"
+puts cmd
+system(cmd)
+
+cmd = "git init"
+puts cmd
+system(cmd)

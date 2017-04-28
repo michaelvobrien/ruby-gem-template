@@ -1,0 +1,11 @@
+CHANGELOG.md
+LICENSE.md
+MANIFEST
+README.md
+bin/project_name
+lib/project_name.rb
+lib/project_name/banner.rb
+lib/project_name/cli.rb
+lib/project_name/color.rb
+lib/project_name/command.rb
+lib/project_name/version.rb

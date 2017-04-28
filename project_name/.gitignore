@@ -1,0 +1,6 @@
+/html
+/pkg
+/tmp
+
+# ignore compiled extensions
+*.bundle
